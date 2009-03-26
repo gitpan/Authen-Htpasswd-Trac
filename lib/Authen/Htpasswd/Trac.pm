@@ -7,7 +7,7 @@ use SQL::Abstract;
 use base qw( Authen::Htpasswd );
 __PACKAGE__->mk_accessors($_) for qw( dbh table sql );
 
-our $VERSION = '0.00001';
+our $VERSION = '0.00002';
 
 sub new {
     my $class = shift;
@@ -42,7 +42,7 @@ sub _dbh {
     $self->dbh($dbh);
 }
 
-sub check_user_permissions {
+sub find_user_permissions {
     my ( $self, $username, $password ) = @_;
     my $user = $self->lookup_user($username);
     croak "could not find user $username" unless $user;
@@ -68,6 +68,30 @@ sub _find_permissions {
     return map { $_->[0] } @{ $sth->fetchall_arrayref };
 }
 
+sub add_permission {
+    my ( $self, $username, $action ) = @_;
+
+    my ( $stmt, @binds )
+        = $self->sql->insert( $self->table, [ $username, $action ], );
+
+    my $sth = $self->dbh->prepare($stmt);
+    return $sth->execute(@binds);
+}
+
+sub remove_permission {
+    my ( $self, $username, $action ) = @_;
+
+    my ( $stmt, @binds ) = $self->sql->delete(
+        $self->table,
+        {   username => $username,
+            action   => $action
+        }
+    );
+
+    my $sth = $self->dbh->prepare($stmt);
+    return $sth->execute(@binds);
+}
+
 1;
 __END__
 
@@ -91,11 +115,13 @@ And interface to trac with account-manager plugin.
 
 =head2 new( password file, { trac => 'database file of trac' })
 
-=head2 check_user_permissions( username, password );
-This method returns trac permission names.
+=head2 find_user_permissions( username, password );
+
+  This method returns trac permission names.
 
 =head2 other methods
-perldoc Authen::Htpasswd
+
+  perldoc Authen::Htpasswd
 
 =head1 AUTHOR
 
