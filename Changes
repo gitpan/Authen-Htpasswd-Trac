@@ -1,7 +1,11 @@
 Revision history for Perl extension Authen::Htpasswd::Trac
 
+0.00003 2009/03/27
+        - update pod.
+
 0.00002 2009/03/26
-        - change method name.
+        - add add_permission and remove_permission methods.
+        - and change method name(find_user_permissions).
 
 0.00001 2009/03/25
         - original version
