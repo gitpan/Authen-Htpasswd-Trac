@@ -7,7 +7,7 @@ use SQL::Abstract;
 use base qw( Authen::Htpasswd );
 __PACKAGE__->mk_accessors($_) for qw( dbh table sql );
 
-our $VERSION = '0.00003';
+our $VERSION = '0.00004';
 
 sub new {
     my $class = shift;
@@ -104,7 +104,7 @@ Authen::Htpasswd::Trac - interface to read and modify Trac password files
   use Authen::Htpasswd::Trac;
 
   my $auth = Authen::Htpasswd::Trac->new( '/path/to/.htpasswd', { trac => '/path/to/trac.db'} );
-  my @rs   = $auth->check_user_permissions($username, $password);
+  my @rs   = $auth->find_user_permissions($username, $password);
 
   $auth->add_permission('myuser', 'TRAC_ADMIN');
   $auth->remove_permission('myuser', 'TRAC_ADMIN');

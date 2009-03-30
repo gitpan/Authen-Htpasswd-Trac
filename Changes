@@ -1,5 +1,8 @@
 Revision history for Perl extension Authen::Htpasswd::Trac
 
+0.00004 2009/03/30
+        - update pod(typo).
+
 0.00003 2009/03/27
         - update pod.
 
